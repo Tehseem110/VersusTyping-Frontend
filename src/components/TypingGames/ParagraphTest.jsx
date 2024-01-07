@@ -1,23 +1,26 @@
 import React, { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import SuccessCard from '../../common/SuccessCard';
+import { soundPlay } from '../../commonFunctions/commonFunctions';
+import typewriterSound from '../../assets/TypingSound1.mp3';
+import wrongWordSound from '../../assets/WrongWordSound.mp3';
+import easterEggSound from '../../assets/EasterEggSound.mp3';
+import { useNavigate } from 'react-router-dom';
 
 let paragraph =
-  'Paragraphs are the building blocks of papers. Many students define paragraphs in terms of length: a paragraph is a group of at least five sentences, a paragraph is half a page long, etc. In reality, though, the unity and coherence of ideas among sentences is what constitutes a paragraph.';
+  "In the bustling realm of corporate monotony, Tehseem found solace in the vibrant camaraderie of his eclectic office group. Tanweer, the tech guru, breathed life into digital complexities. Saket's wit transformed mundane moments into laughter. Divyam's creativity sparked innovation, while Rishab's analytical mind navigated challenges seamlessly. Shanika's vivacity lit up the room, complemented by Ujjwal's calm demeanor that anchored the team. Together, they wove a tapestry of resilience and friendship, weathering deadlines and celebrating victories. In the symphony of their collective efforts, the office became more than just a workspace; it became a haven where bonds flourished, turning colleagues into a family.";
 
 const TypingTest = () => {
   /// initialization
   const inputRef = useRef(null);
-  const bgImage =
-    'https://ik.imagekit.io/f68owkbg7/verusTyping/Background%20Images/Background%20Image2.jpg?updatedAt=1704522499936';
+  const navigate = useNavigate();
 
   /// local state
   const [start, setStart] = useState(false);
+  const [bakchodSound, setBakchodSound] = useState(false);
   const [error, setError] = useState(false);
   const [successTyped, setSuccessTyped] = useState(false);
-  const [testParagraph, setTestParagraph] = useState(
-    'Paragraphs are the building blocks of papers.'
-  );
+  const [testParagraph, setTestParagraph] = useState(paragraph);
   const [typedWord, setTypedWord] = useState('');
   const [nextWord, setNextWord] = useState(testParagraph[0]);
   const [time, setTime] = useState({
@@ -42,7 +45,9 @@ const TypingTest = () => {
     const nextLetter = testParagraph[value.length];
 
     if (clickedValue !== currentWord) {
+      let easterSound = bakchodSound ? easterEggSound : wrongWordSound;
       setError(true);
+      soundPlay(easterSound);
 
       setTimeout(() => {
         setError(false);
@@ -63,6 +68,7 @@ const TypingTest = () => {
       setSuccessTyped(false);
     }, [300]);
     setTypedWord(value);
+    soundPlay(typewriterSound);
     const data = progressBarCalculator(testParagraph.length, value);
     setProgressBar(data);
   };
@@ -73,6 +79,12 @@ const TypingTest = () => {
       inputRef.current.focus();
     }
   };
+
+  const handleOpenBakchodMode = () => {
+    setBakchodSound(true);
+  };
+
+  console.log(bakchodSound);
 
   /// function
 
@@ -167,7 +179,10 @@ const TypingTest = () => {
     <div className="h-full w-full  flex flex-col justify-center items-top p-5">
       {start && !complete ? (
         <div className="w-[100%] h-[30%] flex flex-col justify-center items-center gap-2">
-          <div className="flex gap-4 items-center">
+          <div
+            className="flex gap-4 items-center"
+            onClick={handleOpenBakchodMode}
+          >
             <div
               className={`h-16 w-16 flex items-center justify-center text-2xl text-center text-white-700 bg-white border border-gray-300 rounded-md shadow-md transition-transform duration-150 ease-out transform  ${
                 successTyped ? 'translate-y-[-4px]' : ''
@@ -182,7 +197,13 @@ const TypingTest = () => {
           </div>
 
           {/* {Paragraph To Type for the test} */}
-          <div className=" max-w-[500px] bg-slate-600   text-2xl text-black-900 p-6 backdrop-blur-2xl rounded-2xl">
+          <div
+            className=" max-w-[80%]    text-2xl text-black-900 p-6 backdrop-blur-2xl rounded-2xl"
+            style={{
+              background:
+                'linear-gradient(to top, rgb(17, 24, 39), rgb(88, 28, 135), rgb(124, 58, 237))',
+            }}
+          >
             <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
               <div
                 className={`bg-[#0f172a] h-2.5 rounded-full `}
@@ -237,12 +258,23 @@ const TypingTest = () => {
             lps={stats.lettersPerSecond}
             wpm={stats.wordsPerMinutes}
           />
-          <button
-            className="px-6 py-2 rounded-xl mb-5 bg-white top-0 "
-            onClick={handleTryAgain}
-          >
-            Try Again
-          </button>
+          <div>
+            {' '}
+            <button
+              className="px-6 py-2 rounded-xl mb-5 bg-white top-0 mr-3 "
+              onClick={handleTryAgain}
+            >
+              Try Again
+            </button>
+            <button
+              className="px-6 py-2 rounded-xl mb-5 bg-white top-0 "
+              onClick={() => {
+                navigate('/');
+              }}
+            >
+              Go HomePage
+            </button>
+          </div>
         </div>
       ) : (
         ''
