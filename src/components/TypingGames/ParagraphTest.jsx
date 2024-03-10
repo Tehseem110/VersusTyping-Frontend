@@ -1,14 +1,11 @@
-import React, { useEffect, useRef } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SuccessCard from '../../common/SuccessCard';
 import { soundPlay } from '../../commonFunctions/commonFunctions';
 import typewriterSound from '../../assets/TypingSound1.mp3';
 import wrongWordSound from '../../assets/WrongWordSound.mp3';
 import easterEggSound from '../../assets/EasterEggSound.mp3';
 import { useNavigate } from 'react-router-dom';
-
-let paragraph =
-  "In the bustling realm of corporate monotony, Tehseem found solace in the vibrant camaraderie of his eclectic office group. Tanweer, the tech guru, breathed life into digital complexities. Saket's wit transformed mundane moments into laughter. Divyam's creativity sparked innovation, while Rishab's analytical mind navigated challenges seamlessly. Shanika's vivacity lit up the room, complemented by Ujjwal's calm demeanor that anchored the team. Together, they wove a tapestry of resilience and friendship, weathering deadlines and celebrating victories. In the symphony of their collective efforts, the office became more than just a workspace; it became a haven where bonds flourished, turning colleagues into a family.";
+import { data } from '../../data/ParagraphData';
 
 const TypingTest = () => {
   /// initialization
@@ -20,7 +17,7 @@ const TypingTest = () => {
   const [bakchodSound, setBakchodSound] = useState(false);
   const [error, setError] = useState(false);
   const [successTyped, setSuccessTyped] = useState(false);
-  const [testParagraph, setTestParagraph] = useState(paragraph);
+  const [testParagraph, setTestParagraph] = useState('');
   const [typedWord, setTypedWord] = useState('');
   const [nextWord, setNextWord] = useState(testParagraph[0]);
   const [time, setTime] = useState({
@@ -84,31 +81,19 @@ const TypingTest = () => {
     setBakchodSound(true);
   };
 
-  console.log(bakchodSound);
-
   /// function
 
   const generateParagraph = () => {
     return testParagraph.split('').map((item, index) => {
       if (item === ' ') {
         return (
-          <span
-            key={index}
-            className={`${typedWord[index] === item ? 'text-slate-600' : ''}`}
-          >
+          <span key={index} className={`${typedWord[index] === item ? 'text-slate-600' : ''}`}>
             {' '}
           </span>
         );
       } else {
         return (
-          <span
-            key={index}
-            className={`${typedWord[index] === item ? 'text-white ' : ''} ${
-              index === typedWord.length && error
-                ? 'text-red-700  font-bold animate-bounce'
-                : ''
-            } mr-[2px] `}
-          >
+          <span key={index} className={`${typedWord[index] === item ? 'text-white ' : ''} ${index === typedWord.length && error ? 'text-red-700  font-bold animate-bounce' : ''} mr-[2px] `}>
             {item}
           </span>
         );
@@ -121,9 +106,7 @@ const TypingTest = () => {
     const miliseconds = endTime - startTime;
     const seconds = Math.ceil(miliseconds / 1000);
     const lettersPerSecond = Math.ceil(paragraph.length / seconds);
-    const wordsPerMinutes = Math.ceil(
-      (paragraph.split(' ').length / seconds) * 60
-    );
+    const wordsPerMinutes = Math.ceil((paragraph.split(' ').length / seconds) * 60);
 
     setStats({ miliseconds, seconds, lettersPerSecond, wordsPerMinutes });
   };
@@ -153,6 +136,11 @@ const TypingTest = () => {
     };
   }, [start]);
 
+  useState(() => {
+    const randomNumber = Math.floor(Math.random() * 5);
+    setTestParagraph(data[randomNumber]);
+  }, []);
+
   const progressBarCalculator = (totalLength, enteredString) => {
     if (!enteredString || enteredString.length === 0 || totalLength === 0) {
       return 0;
@@ -179,20 +167,13 @@ const TypingTest = () => {
     <div className="h-full w-full  flex flex-col justify-center items-top p-5">
       {start && !complete ? (
         <div className="w-[100%] h-[30%] flex flex-col justify-center items-center gap-2">
-          <div
-            className="flex gap-4 items-center"
-            onClick={handleOpenBakchodMode}
-          >
+          <div className="flex gap-4 items-center" onClick={handleOpenBakchodMode}>
             <div
               className={`h-16 w-16 flex items-center justify-center text-2xl text-center text-white-700 bg-white border border-gray-300 rounded-md shadow-md transition-transform duration-150 ease-out transform  ${
                 successTyped ? 'translate-y-[-4px]' : ''
               }`}
             >
-              {nextWord === ' ' ? (
-                <img src="https://cdn.icon-icons.com/icons2/1369/PNG/512/-space-bar_90666.png" />
-              ) : (
-                nextWord
-              )}
+              {nextWord === ' ' ? <img src="https://cdn.icon-icons.com/icons2/1369/PNG/512/-space-bar_90666.png" /> : nextWord}
             </div>
           </div>
 
@@ -200,8 +181,7 @@ const TypingTest = () => {
           <div
             className=" max-w-[80%]    text-2xl text-black-900 p-6 backdrop-blur-2xl rounded-2xl"
             style={{
-              background:
-                'linear-gradient(to top, rgb(17, 24, 39), rgb(88, 28, 135), rgb(124, 58, 237))',
+              background: 'linear-gradient(to top, rgb(17, 24, 39), rgb(88, 28, 135), rgb(124, 58, 237))',
             }}
           >
             <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
@@ -221,10 +201,7 @@ const TypingTest = () => {
       {!complete && !start ? (
         <div className="w-[100%] h-[30%] flex justify-center items-center">
           <div className="relative w-20 h-20 rounded-full overflow-hidden  group">
-            <div
-              className="group-hover:z-10 cursor-pointer"
-              onClick={handleStart}
-            >
+            <div className="group-hover:z-10 cursor-pointer" onClick={handleStart}>
               <img
                 src="https://www.svgrepo.com/show/417219/earth.svg"
                 className="w-full h-full object-cover rounded-full transition-transform transform hover:-translate-y-7"
@@ -253,17 +230,10 @@ const TypingTest = () => {
       {complete ? (
         <div className="w-[100%] h-[30%] flex flex-col justify-center gap-4 items-center">
           {' '}
-          <SuccessCard
-            tt={stats.seconds}
-            lps={stats.lettersPerSecond}
-            wpm={stats.wordsPerMinutes}
-          />
+          <SuccessCard tt={stats.seconds} lps={stats.lettersPerSecond} wpm={stats.wordsPerMinutes} />
           <div>
             {' '}
-            <button
-              className="px-6 py-2 rounded-xl mb-5 bg-white top-0 mr-3 "
-              onClick={handleTryAgain}
-            >
+            <button className="px-6 py-2 rounded-xl mb-5 bg-white top-0 mr-3 " onClick={handleTryAgain}>
               Try Again
             </button>
             <button

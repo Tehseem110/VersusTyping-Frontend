@@ -4,28 +4,14 @@ import typewriterSound from '../../assets/TypingSound1.mp3';
 import wrongWordSound from '../../assets/WrongWordSound.mp3';
 import { soundPlay } from '../../commonFunctions/commonFunctions';
 import SuccessCardTenWord from '../../common/SuccessCardTenWord';
-const data = [
-  'iceCream',
-  'world',
-  'game',
-  'apple',
-  'banana',
-  'orange',
-  'pizza',
-  'coffee',
-  'book',
-  'computer',
-];
-
+import { data } from '../../data/TenWordData';
 const TEN_WORD = () => {
   /// initialization
   const inputRef = useRef(null);
   const navigate = useNavigate();
 
   /// local state
-  const [wordCollection, setWordCollection] = useState([
-    ...data.map((item) => item.toUpperCase()),
-  ]);
+  const [wordCollection, setWordCollection] = useState([...data.map((item) => item.toUpperCase())]);
   const [start, setStart] = useState(false);
   const [complete, setComplete] = useState(false);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
@@ -87,10 +73,7 @@ const TEN_WORD = () => {
     setCurrentTypesWord(value);
     soundPlay(typewriterSound);
 
-    if (
-      wordCollection[currentWordIndex].length ===
-      currentTypedWord.length + 1
-    ) {
+    if (wordCollection[currentWordIndex].length === currentTypedWord.length + 1) {
       setTime({
         ...time,
         [wordCollection[currentWordIndex]]: {
@@ -115,14 +98,8 @@ const TEN_WORD = () => {
     return wordCollection[currentWordIndex].split('').map((item, index) => {
       return (
         <div
-          className={`h-16 w-16 flex items-center justify-center text-2xl text-center  ${
-            currentTypedWord[index] === item
-              ? 'bg-black text-white'
-              : 'bg-white text-black'
-          } ${
-            index === currentTypedWord.length && error
-              ? 'bg-red-600  font-bold animate-bounce'
-              : ''
+          className={`h-16 w-16 flex items-center justify-center text-2xl text-center  ${currentTypedWord[index] === item ? 'bg-black text-white' : 'bg-white text-black'} ${
+            index === currentTypedWord.length && error ? 'bg-red-600  font-bold animate-bounce' : ''
           } border border-gray-300 rounded-md shadow-md transition-transform duration-150 ease-out transform `}
           key={index}
         >
@@ -151,6 +128,16 @@ const TEN_WORD = () => {
     }
   }, [complete]);
 
+  useEffect(() => {
+    const getRandomWords = () => {
+      const shuffledData = data.sort(() => Math.random() - 0.5);
+      const randomWords = shuffledData.slice(0, 10);
+      setWordCollection([...randomWords.map((item) => item.toUpperCase())]);
+    };
+
+    getRandomWords();
+  }, []);
+
   const handleStart = () => {
     setStart(true);
     if (inputRef.current) {
@@ -173,8 +160,7 @@ const TEN_WORD = () => {
         <div
           className=" text-white text-xl font-semibold text-center p-3 rounded-xl cursor-pointer hover:p-4"
           style={{
-            background:
-              'linear-gradient(to top, rgb(17, 24, 39), rgb(88, 28, 135), rgb(124, 58, 237))',
+            background: 'linear-gradient(to top, rgb(17, 24, 39), rgb(88, 28, 135), rgb(124, 58, 237))',
           }}
           onClick={handleStart}
         >
@@ -184,13 +170,7 @@ const TEN_WORD = () => {
         ''
       )}
 
-      {start && !complete ? (
-        <div className="w-[500px] h-[500px] rounded-full text-white flex justify-center items-center text-2xl">
-          {generateParagraph()}
-        </div>
-      ) : (
-        ''
-      )}
+      {start && !complete ? <div className="w-[500px] h-[500px] rounded-full text-white flex justify-center items-center text-2xl">{generateParagraph()}</div> : ''}
 
       {complete ? (
         <div className="w-[100%] h-[30%] flex flex-col justify-center gap-4 items-center">
@@ -198,10 +178,7 @@ const TEN_WORD = () => {
           <SuccessCardTenWord data={stats} />
           <div>
             {' '}
-            <button
-              className="px-6 py-2 rounded-xl mb-5 bg-white top-0 mr-3 "
-              onClick={handleTryAgain}
-            >
+            <button className="px-6 py-2 rounded-xl mb-5 bg-white top-0 mr-3 " onClick={handleTryAgain}>
               Try Again
             </button>
             <button

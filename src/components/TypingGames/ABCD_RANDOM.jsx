@@ -66,10 +66,7 @@ const ABCD_RANDOM = () => {
     const currentWord = alphabet[value.length - 1];
     console.log(currentWord);
 
-    if (
-      typedAlphabet.split('').includes(clickedValue) ||
-      !alphabet.split('').includes(clickedValue)
-    ) {
+    if (typedAlphabet.split('').includes(clickedValue) || !alphabet.split('').includes(clickedValue)) {
       console.log('error');
       return;
     }
@@ -124,8 +121,6 @@ const ABCD_RANDOM = () => {
     setStats({ miliseconds, seconds, lettersPerSecond });
   };
 
-  console.log(stats);
-
   return (
     <div className="h-full w-full flex flex-col justify-center items-center">
       {/* {Aphabet look} */}
@@ -135,14 +130,8 @@ const ABCD_RANDOM = () => {
           {alphabet.split('').map((item, index) => {
             return (
               <div
-                className={`h-16 w-16 flex items-center justify-center text-2xl text-center  ${
-                  letterHashMap[item]
-                    ? 'bg-black text-white'
-                    : 'bg-white text-black'
-                } ${
-                  index === typedAlphabet.length && error
-                    ? 'bg-red-600  font-bold animate-bounce'
-                    : ''
+                className={`h-16 w-16 flex items-center justify-center text-2xl text-center  ${letterHashMap[item] ? 'bg-black text-white' : 'bg-white text-black'} ${
+                  index === typedAlphabet.length && error ? 'bg-red-600  font-bold animate-bounce' : ''
                 } border border-gray-300 rounded-md shadow-md transition-transform duration-150 ease-out transform `}
                 key={index}
               >
@@ -155,18 +144,9 @@ const ABCD_RANDOM = () => {
         ''
       )}
       {!complete && !start ? (
-        <div
-          className="w-[100px] rounded-full bg-white hover:w-[120px] relative"
-          onClick={handleStart}
-        >
-          <img
-            src="https://ik.imagekit.io/f68owkbg7/verusTyping/assests/jupiter-svgrepo-com%20(1).svg?updatedAt=1704612909699"
-            className="bg-cover cursor-pointer"
-          />
-          <i
-            className="fa fa-play-circle absolute top-8 left-0 right-0 text-center  text-black text-2xl font-semibold"
-            aria-hidden="true"
-          >
+        <div className="w-[100px] rounded-full bg-white hover:w-[120px] relative" onClick={handleStart}>
+          <img src="https://ik.imagekit.io/f68owkbg7/verusTyping/assests/jupiter-svgrepo-com%20(1).svg?updatedAt=1704612909699" className="bg-cover cursor-pointer" />
+          <i className="fa fa-play-circle absolute top-8 left-0 right-0 text-center  text-black text-2xl font-semibold" aria-hidden="true">
             play
           </i>
         </div>
@@ -178,10 +158,7 @@ const ABCD_RANDOM = () => {
           <SuccessCardABCD lps={stats.lettersPerSecond} tt={stats.seconds} />
           <div>
             {' '}
-            <button
-              className="px-6 py-2 rounded-xl mb-5 bg-white top-0 mr-3 "
-              onClick={handleTryAgain}
-            >
+            <button className="px-6 py-2 rounded-xl mb-5 bg-white top-0 mr-3 " onClick={handleTryAgain}>
               Try Again
             </button>
             <button
